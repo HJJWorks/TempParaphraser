@@ -1,0 +1,7 @@
+model_name_or_path: model/Temparaphraser
+template: llama3_rewrite
+repetition_penalty: 1.05
+infer_backend: vllm
+vllm_gpu_util: 0.3
+vllm_enforce_eager: true
+vllm_maxlen: 1024
