@@ -9,7 +9,6 @@ import json
 import argparse
 import openai
 
-# Set up command-line arguments for the script
 parser = argparse.ArgumentParser()
 parser.add_argument('--eval_model_name', type=str, default="hc3")
 parser.add_argument('--rewrite_times', type=int, default=5)
@@ -19,7 +18,6 @@ parser.add_argument('--save_path', type=str, required=True)
 parser.add_argument('--api', type=str, required=True)
 args = parser.parse_args()
 
-# Extract arguments
 eval_model_name = args.eval_model_name
 rewrite_times = args.rewrite_times
 temperature = args.temperature
@@ -33,10 +31,8 @@ if not os.path.exists(os.path.dirname(save_path)):
 # Define system prompt for rewriting text
 system_prompt = """Rewrite the following text to sound more natural and human-like. Keep the same information and overall structure, but use more casual language, varied sentence structures, and add subtle personal touches."""
 
-# Initialize the device for model
 device = torch.device("cuda")
 
-# Load evaluation model based on the specified model name
 if rewrite_times != 1:
     if eval_model_name == "SA":
         eval_model_path = "SuperAnnotate/roberta-large-llm-content-detector"
@@ -50,7 +46,6 @@ if rewrite_times != 1:
     else:
         raise NotImplementedError("Unknown eval model")
 
-# Set OpenAI API key and base URL
 openai.api_key = ''
 openai.api_base = args.api
 

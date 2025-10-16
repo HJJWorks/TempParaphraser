@@ -17,12 +17,12 @@ Follow these exact steps to replicate the experiments presented in our paper:
 
 #### 1. Launch the VLLM Backend via Llamafactory
 
-We use Llamafactory to start the VLLM backend (a high-performance inference engine for large language models). Run the following command in your terminal:
+We use Llamafactory to start the VLLM backend. Run the following command in your terminal:
 
 
 
 ```
-API\_PORT=8000 llamafactory-cli api attack/start\_paraphrasing\_model\_vllm.yaml infer\_backend=vllm vllm\_enforce\_eager=true
+API_PORT=8000 llamafactory-cli api attack/start_paraphrasing_model_vllm.yaml infer_backend=vllm vllm_enforce_eager=true
 ```
 
 
@@ -39,7 +39,7 @@ After launching the backend, execute the script to process the test set and gene
 
 
 ```
-bash attack/attack\_for\_experiment.sh
+bash attack/attack_for_experiment.sh
 ```
 
 
