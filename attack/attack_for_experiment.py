@@ -1,9 +1,12 @@
+import sys, os
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
+from generated_text_detector.utils.model.roberta_classifier import RobertaClassifier
 import os
 import torch
 import torch.nn.functional as F
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformers import RobertaConfig, RobertaTokenizer, RobertaForSequenceClassification
-from generated_text_detector.utils.model.roberta_classifier import RobertaClassifier
 from tqdm import tqdm
 import json
 import argparse
@@ -209,7 +212,6 @@ if __name__ == "__main__":
 
         results.append(result_json)
         
-        # Save results periodically
         if len(results) % 100 == 0:
             save_results(save_path, results)
     

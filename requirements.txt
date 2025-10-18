@@ -1,4 +1,5 @@
+torch==2.4.0
+transformers==4.45.2
 vllm==0.6.3.post1
-transformers==4.43.2
-torch==2.2.1
-generated-text-detector==1.0.0
+textstat
+scikit-learn

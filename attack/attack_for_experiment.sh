@@ -10,6 +10,6 @@ Times=1.2
       --temperature $Temp \
       --input_path /data/HC3/test_rnd10k.jsonl \
       --save_path /TempParaphraser/result/llama3.2-1b/n$Times-T$Temp-hc3.json \
-      --api http://0.0.0.0:8000/v1
+      --api http://0.0.0.0:10001/v1
   #done
 #done
