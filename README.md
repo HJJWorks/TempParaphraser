@@ -1,61 +1,148 @@
 # TempParaphraser: "Heating Up" Text to Evade AI-Text Detection through Paraphrasing 🔥📝
-EMNLP 2025
 
-## How to Use
+**EMNLP 2025**
 
-The `attack` directory contains two key types of code:
+## Overview
 
-1. **Experimental test code** for validating the model’s performance
-2. **Custom attack code** that supports single-text input (accepts a single text segment) and returns the paraphrased output. This code can be adapted to meet your specific experimental requirements.
+TempParaphraser is a fine-tuned paraphrasing model designed to “heat up” the text representation and evade AI-text detectors while preserving the semantic content.
+This repository provides all scripts and configuration files to **reproduce the results** from our EMNLP 2025 paper.
 
 
-### Step-by-Step Guide to Reproduce Our Experiments
+## ⚙️ Environment Setup
 
-Follow these steps exactly to replicate the experiments presented in our paper:
+### 1. Clone the Repository
 
-#### 1. Download the Model and Launch the VLLM Backend via Llamafactory
-Visit https://huggingface.co/huangjj877/TempParaphraser to obtain our fine-tuned paraphrasing model (used in the main experiments).
-
-We use Llamafactory to start the VLLM backend. Refer to https://github.com/hiyouga/LLaMA-Factory and follow its installation instructions, ensuring the vllm functionality is installed.
-
-Run the following command in your terminal:
 ```bash
+git clone https://github.com/HJJWorks/TempParaphraser.git
+cd TempParaphraser
+```
+
+### 2. Create and Activate the Conda Environment
+
+```bash
+conda create -n tp python=3.10
+conda activate tp
+```
+
+### 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+
+## 📦 Model Download and Placement
+
+Before running any experiments, you must download our fine-tuned paraphrasing model:
+
+1. Visit [**huangjj877/TempParaphraser**](https://huggingface.co/huangjj877/TempParaphraser)
+2. **Place the entire folder under:**
+
+   ```
+   TempParaphraser/model/
+   ```
+
+
+## 🧠 Install and Configure LLaMA-Factory (Required)
+
+**TempParaphraser relies on [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) to launch the VLLM backend**,
+which enables *high-throughput paraphrasing* and *multi-round text rewriting*.
+To avoid dependency conflicts, we **recommend installing LLaMA-Factory in a separate Conda environment.**
+
+### Step 1. Create and Activate a New Environment for LLaMA-Factory
+
+```bash
+conda create -n llamafactory python=3.10
+conda activate llamafactory
+```
+
+### Step 2. Install LLaMA-Factory with VLLM Support
+
+```bash
+git clone https://github.com/hiyouga/LLaMA-Factory.git
+cd LLaMA-Factory
+pip install -e ".[vllm]"
+```
+
+After installation, verify it by running:
+
+```bash
+llamafactory-cli --help
+```
+
+If the help message appears correctly, you’re ready to launch the paraphrasing backend.
+
+
+## 🚀 Run the Paraphrasing Backend via LLaMA-Factory
+
+Switch to your LLaMA-Factory environment (if not already active) and start the model backend:
+
+```bash
+conda activate llama
+cd TempParaphraser
 API_PORT=10001 llamafactory-cli api attack/start_paraphrasing_model_vllm.yaml
 ```
-This launches the inference API for the paraphrasing model.
 
+✅ If successful, you’ll see:
 
-#### 2. Run the Main Experiment Script
-
-After launching the backend, execute the script to process the test set and generate paraphrased text:
-
-1. First, open the `attack/attack_for_experiment.sh` file and confirm (or set) the `API_PORT` parameter to `10001` (to match the backend port in Step 1).
-
-2. Run the script with the following command:
-```bash
-bash attack/attack_for_experiment.sh
+```
+Uvicorn running on http://0.0.0.0:10001 (Press CTRL+C to quit)
 ```
 
-**What the script does:**
-- Automatically iterates through every GPT-generated text sample in the test set.
-- Applies TempParaphraser’s paraphrasing to each sample (while preserving semantic meaning).
-- Saves the fully paraphrased dataset to your specified directory (check the script for output path details).
+This backend provides the HTTP API endpoint used by all TempParaphraser scripts for inference.
+
+## Reproducing the Experiments
+
+Follow these steps to replicate our paper’s experiments.
+
+### Run the Main Experiment Script
+
+After the backend is running:
+
+1. Open `attack/attack_for_experiment.sh`
+
+   * Make sure `API_PORT=10001` matches your backend port.
+   * Adjust dataset input/output paths if needed.
+
+2. Execute the batch script:
+
+   ```bash
+   bash attack/attack_for_experiment.sh
+   ```
+
+This script will:
+
+* Iterate through all GPT-generated test samples.
+* Paraphrase each sample using TempParaphraser (preserving semantics).
+* Save the fully paraphrased dataset to your defined output directory.
+
+## 🧠 Customizing Your Experiment
+
+You can modify:
+
+* **`attack/attack_for_experiment.py` → `rewrite_text()`**
+  This is the entry point for paraphrasing single text segments.
+* **`main()`**
+  Adapt the dataset iteration logic to fit your own corpus or evaluation pipeline.
 
 
-### How to Customize Your Experiments
-The `rewrite_text` function in `attack/attack_for_experiment.py` serves as the entry point for paraphrasing single text segments. You can freely adapt it to your experimental needs by modifying the dataset iteration method in the `main` function.
+## 🤝 Acknowledgements
 
-
-### Acknowledgements
 Some code and data are derived from the following open-source repositories:
-- https://github.com/zhouying20/HMGC
-- https://github.com/superannotateai/generated_text_detector
-- https://github.com/textstat/textstat
-- https://github.com/baoguangsheng/fast-detect-gpt
-- https://github.com/hiyouga/LLaMA-Factory
+
+* [HMGC](https://github.com/zhouying20/HMGC)
+* [Generated-Text-Detector](https://github.com/superannotateai/generated_text_detector)
+* [textstat](https://github.com/textstat/textstat)
+* [Fast-Detect-GPT](https://github.com/baoguangsheng/fast-detect-gpt)
+* [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory)
 
 We thank the authors of these repositories for their valuable research resources.
 
 
-### Code Usage Restrictions
-This code is restricted to academic research use only. For any questions, please contact junjie2001@stu.xmu.edu.cn.
+## 📜 License & Usage Restriction
+
+This code is released **for academic research purposes only**.
+Commercial use is strictly prohibited.
+
+For any questions or collaborations, please contact:
+📧 **[junjie2001@stu.xmu.edu.cn](mailto:junjie2001@stu.xmu.edu.cn)**
